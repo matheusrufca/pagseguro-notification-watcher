@@ -7,12 +7,11 @@ var Logger = (function (NOTIFICATIONS_PATH) {
     var self = this;
     var service = {};
 
-    service.save = function (objData) {
-        console.log(objData);
 
+    service.save = function (objData) {
         objData.timestamp = Date.now();
         json.notifications.push(objData);
-        console.log(json)
+
         fs.writeFile(NOTIFICATIONS_PATH, JSON.stringify(json));
     };
 

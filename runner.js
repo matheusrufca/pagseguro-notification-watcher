@@ -1,11 +1,13 @@
 const http = require('http');
+const fs = require('fs');
 const app = require('./application').App;
+const NOTIFICATIONS_PATH = './data/notifications.json';
 
 http.createServer(function (req, res) {
-    var processedData = {};
-    var queryData = '';
+    var processedData,
+        queryData = '';
 
-    console.log('A new request arrived with HTTP headers: ' + JSON.stringify(req.headers));
+    //console.log('A new request arrived with HTTP headers: ' + JSON.stringify(req.headers));
 
     res.writeHead(200, {
         'Content-Type': 'text/html'
@@ -17,14 +19,19 @@ http.createServer(function (req, res) {
         if (queryData.length > 1e6) {
             request.connection.destroy();
         }
-
-        console.log(data);
-        console.log(queryData);
-        console.log(app);
         app.processNotification(queryData);
+
+
     });
+    
+    fs.readFile(NOTIFICATIONS_PATH, function (err, data) {
+        if (err) {
+            return;
+        };
+        console.log(data);
+        console.log(JSON.parse(data || {}));
+        processedData = JSON.parse(data || {});
 
-    req.on('end', function () {});
-
-    res.end('Hello, world! [logging sample]');
+        res.end(JSON.stringify(processedData));
+    });
 }).listen(process.env.PORT);
