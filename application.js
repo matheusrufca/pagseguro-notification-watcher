@@ -5,7 +5,7 @@ var Application = (function (loggerService) {
     var application = {};
 
     application.processNotification = function (notificationData) {
-        console.log(notificationData);
+        console.log('saving...');
         loggerService.save(notificationData || {});
     }
     return application;
